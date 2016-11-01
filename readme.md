@@ -1,40 +1,71 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img width="150"src="https://laravel.com/laravel.png"></a></p>
+# Laravel Elixir Custom Versioning Path
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+This is an example on how to get a custom Build Path or Versioning Path with laravel elixir.
 
-## About Laravel
+## Setup
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+We took advantage of the assets files that are out of the box, public/css/app.css and public/js/app.js. Think of them as our sources files.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+We put these files in the public/assets/ folder which is a common and recommended way to organize our assets in the public folder.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+Then the tasks were defined in the [gulpfile.js](https://github.com/pakogn/laravel-elixir-custom-versioning-path/blob/master/gulpfile.js#L20-L32):
 
-## Learning Laravel
+```javascript
+elixir((mix) => {
+    mix
+        .styles([
+            'assets/css/app.css'
+        ], 'public/assets/css/style.css', './public')
+        .scripts([
+            'assets/js/app.js'
+        ], 'public/assets/js/application.js', './public')
+        .version([
+            'assets/css/style.css',
+            'assets/js/application.js'
+        ], 'public');
+});
+```
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+```
+Notice that we specified the public directory in the version method as the second parameter.
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+Now we have to reference our versioned resources. Again, We took advantage of the [welcome.blade.php](https://github.com/pakogn/laravel-elixir-custom-versioning-path/blob/master/resources/views/welcome.blade.php) view.
 
-## Contributing
+First, we added the css versioned [file](https://github.com/pakogn/laravel-elixir-custom-versioning-path/blob/master/resources/views/welcome.blade.php#L10).
+```html
+<link href="{{ asset(elixir('assets/css/style.css', '')) }}" rel="stylesheet" type="text/css">
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+```
+Notice that we have sent an empty string as the second parameter so our asset file will be found correctly
+```
 
-## Security Vulnerabilities
+I like to wrap the elixir in a an asset method to have a well formed URL. It's about tastes!
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Next, we added the js versioned [file](https://github.com/pakogn/laravel-elixir-custom-versioning-path/blob/master/resources/views/welcome.blade.php#L99) too!
 
-## License
+```html
+<script type="text/javascript" src="{{ asset(elixir('assets/js/application.js', '')) }}"></script>
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Finally and Optionally, to use the Vue suggestion we put the example component in the [welcome view](https://github.com/pakogn/laravel-elixir-custom-versioning-path/blob/master/resources/views/welcome.blade.php#L95).
+
+```html
+<example></example>
+```
+
+Now it's time to check our setup!
+
+run:
+  1. composer install
+  2. npm install
+  3. gulp
+  4. php artisan serve
+  5. go to [http://localhost:8000](http://localhost:8000)
+
+```
+Note: It's recommended to use the latest version of Node and NPM.
+```
+
+I find this workaround useful when you have a template or some assets you don't want to break. Also to maintain your folder structure without leading with the common build directory created when versioning our assets.
