@@ -7,6 +7,8 @@
 
         <title>Laravel</title>
 
+        <link href="{{ asset(elixir('assets/css/style.css', '')) }}" rel="stylesheet" type="text/css">
+
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
@@ -89,7 +91,11 @@
                     <a href="https://forge.laravel.com">Forge</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
+
+                <example></example>
             </div>
         </div>
+
+        <script type="text/javascript" src="{{ asset(elixir('assets/js/application.js', '')) }}"></script>
     </body>
 </html>

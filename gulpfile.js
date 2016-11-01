@@ -1,5 +1,9 @@
 const elixir = require('laravel-elixir');
 
+elixir.config.notifications = false;
+// elixir.config.production = false
+// elixir.config.sourcemaps = true
+
 require('laravel-elixir-vue-2');
 
 /*
@@ -14,6 +18,15 @@ require('laravel-elixir-vue-2');
  */
 
 elixir((mix) => {
-    mix.sass('app.scss')
-       .webpack('app.js');
+    mix
+        .styles([
+            'assets/css/app.css'
+        ], 'public/assets/css/style.css', './public')
+        .scripts([
+            'assets/js/app.js'
+        ], 'public/assets/js/application.js', './public')
+        .version([
+            'assets/css/style.css',
+            'assets/js/application.js'
+        ], 'public');
 });
