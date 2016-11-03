@@ -68,4 +68,4 @@ run:
 Note: It's recommended to use the latest version of Node and NPM.
 ```
 
-I find this workaround useful when you have a template or some assets you don't want to break. Also to maintain your folder structure without leading with the common build directory created when versioning our assets.
+I find this workaround useful when you have a template or some assets you don't want to break. Also to maintain your folder structure without dealing with the common build directory created when versioning our assets.
